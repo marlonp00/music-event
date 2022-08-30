@@ -19,7 +19,7 @@ export default function Home({events}) {
         <EventItem key={evt.id} evt={evt} />
       ))}
       {events.length > 0 && (
-        <Link href='events/'><a className="btn btn-secondary">Alle Events <FaArrowRight className={{ "font-size": "100px" }}/></a></Link>
+        <Link href='events/'><a className="btn btn-secondary">Alle Events <FaArrowRight style={{ "transform": "translateY(2px)" }}/></a></Link>
       )}
     </Layout>
   )
