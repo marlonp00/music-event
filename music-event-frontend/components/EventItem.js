@@ -4,17 +4,22 @@ import styles from '@/styles/EventItem.module.css'
 
 
 export default function EventItem({evt}) {
+
+  const { attributes } = evt;
+
+
   return (
     <div className={styles.event}>
       <div className={styles.img}>
-        <Image src={evt.image ? evt.image : '/images/event-default.png'} width={170} height={100} />
+        <Image src={attributes.image ? attributes.image.data.attributes.formats.thumbnail.url
+  : '/images/event-default.png'} width={170} height={100} />
       </div>
       <div className={styles.info}>
-        <span>Am {evt.date} um {evt.time}</span>
-        <h3>{evt.name}</h3>
+        <span>Am {new Date(attributes.date).toLocaleDateString('de-DE')} um {attributes.time}</span>
+        <h3>{attributes.name}</h3>
       </div>
       <div className={styles.link}>
-        <Link href={`/events/${evt.slug}`}>
+        <Link href={`/events/${attributes.slug}`}>
           <a className='btn'>Details</a>
         </Link></div>
     </div>
