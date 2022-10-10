@@ -1,18 +1,38 @@
 import {FaPencilAlt, FaTimes} from 'react-icons/fa'
+import {toast} from 'react-toastify'
 import Layout from "@/components/Layout"
 import { API_URL } from "@/config/index"
 import styles from "@/styles/Event.module.css"
 import Link from "next/link"
 import Image from "next/image"
+import {useRouter} from 'next/router'
 
 export default function EventPage({evt}) {
 
-  const { attributes } = evt;
+  const { attributes, id } = evt;
+
+  const router = useRouter();
 
 
-  const deleteEvent = (e) => {
+  const deleteEvent = async (e) => {
 
-    console.log("delete", e);
+    console.log(attributes);
+    if(confirm('Bist du dir sicher?')) {
+      const res = await fetch(`${API_URL}/api/events/${id}`, {
+        method: 'DELETE',
+
+      });
+
+      const data = res.json();
+
+      if(!res.ok) {
+        toast.error(data.message);
+      } else {
+        router.push('/events');
+      }
+    }
+
+   // attributes.filter(attributes.id);
 
   }
 
@@ -27,11 +47,11 @@ export default function EventPage({evt}) {
         </div>
         <span>Am {new Date(attributes.date).toLocaleDateString('de-DE')} um {attributes.time}</span>
         <h1>{attributes.name}</h1>
-        { attributes.image && (
+        { attributes.image.data && (
           <div className={styles.image}>
             <Image src={attributes.image.data.attributes.formats.medium.url} width={960} height={600} />
-          </div> 
-        )}
+          </div> )
+        }
 
         <h3>Band:</h3>
         <p>{attributes.performers}</p>

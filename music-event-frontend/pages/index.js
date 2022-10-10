@@ -1,3 +1,4 @@
+
 import EventItem from "@/components/EventItem";
 import {FaArrowRight} from 'react-icons/fa'
 import Layout from "@/components/Layout"
@@ -12,6 +13,7 @@ export default function Home({events}) {
 
   return (
     <Layout>
+      
       <h1>Nächtste Events</h1>
       { events.length === 0 && <h3>No events to show</h3> }
 
