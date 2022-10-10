@@ -40,7 +40,7 @@ export default function EventPage({evt}) {
     <Layout>
       <div className={styles.event}>
         <div className={styles.controls}>
-          <Link href={`/events/edit/${attributes.id}`}>
+          <Link href={`/events/edit/${id}`}>
             <a><FaPencilAlt /> Bearbeiten</a>
           </Link>
           <a href="#" className={styles.delete} onClick={deleteEvent}><FaTimes />Löschen</a>
