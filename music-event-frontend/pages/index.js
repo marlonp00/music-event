@@ -6,6 +6,7 @@ import { API_URL } from "@/config/index";
 import Link from "next/link";
 
 
+const PER_PAGE = 3;
 
 export default function Home({events}) {
 
@@ -30,11 +31,11 @@ export default function Home({events}) {
 }
 
 export async function getStaticProps() {
-  const res = await await fetch(`${API_URL}/api/events?populate=*&_sort=date:ASC&_limit=3`);
+  const res = await await fetch(`${API_URL}/api/events?populate=*&_sort=date:ASC&pagination[limit]=${PER_PAGE}`);
   const json = await res.json();
   const events = json.data;
   return { 
     props: {events: events},
-    revalidate: 1,
+    revalidate: 1
   };
 }
