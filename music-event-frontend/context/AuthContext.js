@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { API_URL } from "../config";  
+import { NEXT_URL } from "../config";  
 
 const AuthContext = createContext();
 
@@ -16,17 +16,25 @@ export const AuthProvider = ({children}) => {
     // Login User
     const loginUser = async ({email:identifier, password}) => {
       console.log({identifier, password});
-      /*
-      const req = await fetch(`${API_URL}/api/auth/local`, {
+
+      
+      const res = await fetch(`${NEXT_URL}/api/login`, {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
       },
-        body: {"identifier": identifier, "password" : password}
+       body: JSON.stringify({identifier, password})
+      })
+      const data = await res.json();
 
-      }).then();
-      const data = await req.json();
-      return console.log(data); */
+      console.log("This:", data)
+      
+     if(res.ok) {
+      setUser(data.user);
+     }  else {
+      setError(data.message);
+     // setError(null);
+     }   
     }
       // logout User
   const logoutUser = async () => {

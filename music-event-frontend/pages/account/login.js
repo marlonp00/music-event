@@ -12,6 +12,12 @@ export default function login() {
 
   const {loginUser, error} = useContext(AuthContext);
 
+  // Send error message to UI
+  useEffect(() => {
+   error && toast.error(error);
+  }, [error]);
+
+  // Send Login data to Context
   const handleSubmit = (e) => {
     e.preventDefault();
     loginUser({ email, password });
