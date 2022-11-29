@@ -16,7 +16,7 @@ export default function Home({events}) {
     <Layout>
       
       <h1>Nächtste Events</h1>
-      { events.length === 0 && <h3>No events to show</h3> }
+      { events.length === 0 && <h3>Keine Events</h3> }
 
       {
       events?.map(evt =>  (

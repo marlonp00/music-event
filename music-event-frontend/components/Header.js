@@ -9,6 +9,8 @@ import Search from "./Search"
 export default function Header() {
 
   const {user, logoutUser} = useContext(AuthContext);
+
+  console.log("HEADER:", user);
   
   return (
    <header className={styles.header}>
@@ -34,7 +36,7 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                <Link href='/events/dashboard'>
+                <Link href='/account/dashboard'>
                   <a>Dashboard</a>
                 </Link>
               </li>

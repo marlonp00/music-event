@@ -1,13 +1,41 @@
 import {parseCookies} from '@/helpers/index'
+import {toast} from 'react-toastify'
 import Layout from '@/components/Layout'
 import DashboardEvent from '@/components/DashboardEvent'
 import { API_URL } from '@/config/index'
+import {useRouter} from 'next/router'
+import {useState} from 'react'
 import styles from '@/styles/Dashboard.module.css'
 
-export default function DashboardPage({ events }) {
+export default function DashboardPage({ events, token }) {
+  const router = useRouter();
 
-  const deleteEvent = (id) => {
-    console.log(id);
+  const [evts, setEvts] = useState(events);
+
+
+  const deleteEvent = async (id) => {
+
+    if(confirm('Bist du dir sicher?')) {
+      const res = await fetch(`${API_URL}/api/events/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+
+      });
+
+      const data = res.json();
+
+      if(!res.ok) {
+        toast.error(data.message);
+      } else {
+       const newEvents = evts.filter(evt => evt.id !== id);
+       setEvts(newEvents);
+      }
+    }
+
+   // attributes.filter(attributes.id);
+
   }
 
   return (
@@ -15,7 +43,7 @@ export default function DashboardPage({ events }) {
      <div className={styles.dash}>
       <h1>Dashboard</h1>
       <h3>Meine Events</h3>
-      {events.map((event) => (
+      {evts.map((event) => (
         <DashboardEvent key={event.id} evt={event} handleDelete={deleteEvent} />
       ))}
      </div>
@@ -37,7 +65,8 @@ export async function getServerSideProps({ req }) {
 
   return {
     props: {
-      events
+      events,
+      token
     },
   }
 }

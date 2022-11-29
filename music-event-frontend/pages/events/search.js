@@ -16,7 +16,7 @@ export default function SearchPage({events}) {
     <Layout>
       <Link href='/events'>zurück</Link>
       <h1>Suchergebnis zu: {router.query.term}</h1>
-      { events.length === 0 && <h3>No events to show</h3> }
+      { events.length === 0 && <h3>Keine Suchergebnisse gefunden</h3> }
 
       {events.map(evt => (
         <EventItem key={evt.id} evt={evt} />
@@ -46,6 +46,11 @@ export async function getServerSideProps({query: {term}}) {
         },
         {
           venue: {
+            $containsi: term,
+          },
+        },
+        {
+          time: {
             $containsi: term,
           },
         },

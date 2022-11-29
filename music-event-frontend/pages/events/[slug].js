@@ -1,50 +1,20 @@
-import {FaPencilAlt, FaTimes} from 'react-icons/fa'
-import {toast} from 'react-toastify'
 import Layout from "@/components/Layout"
 import { API_URL } from "@/config/index"
 import styles from "@/styles/Event.module.css"
+import MapEvent from "@/components/MapEvent"
 import Link from "next/link"
 import Image from "next/image"
-import {useRouter} from 'next/router'
 
-export default function EventPage({evt}) {
+export default function EventPage({evt, token}) {
 
-  const { attributes, id } = evt;
+  console.log(token);
 
-  const router = useRouter();
-
-
-  const deleteEvent = async (e) => {
-
-    console.log(attributes);
-    if(confirm('Bist du dir sicher?')) {
-      const res = await fetch(`${API_URL}/api/events/${id}`, {
-        method: 'DELETE',
-
-      });
-
-      const data = res.json();
-
-      if(!res.ok) {
-        toast.error(data.message);
-      } else {
-        router.push('/events');
-      }
-    }
-
-   // attributes.filter(attributes.id);
-
-  }
+  const { attributes} = evt;
 
   return (
     <Layout>
       <div className={styles.event}>
-        <div className={styles.controls}>
-          <Link href={`/events/edit/${id}`}>
-            <a><FaPencilAlt /> Bearbeiten</a>
-          </Link>
-          <a href="#" className={styles.delete} onClick={deleteEvent}><FaTimes />Löschen</a>
-        </div>
+        
         <span>Am {new Date(attributes.date).toLocaleDateString('de-DE')} um {attributes.time}</span>
         <h1>{attributes.name}</h1>
         { attributes.image.data && (
@@ -53,12 +23,15 @@ export default function EventPage({evt}) {
           </div> )
         }
 
-        <h3>Band:</h3>
+        <h3>Künstler:</h3>
         <p>{attributes.performers}</p>
         <h3>Beschreibung:</h3>
         <p>{attributes.description}</p>
         <h3>Ort: {attributes.venue}</h3>
         <p>{attributes.address}</p>
+
+<MapEvent evt={evt} />
+       
         <Link href="/events">
           <a className={styles.back}>{'<'} Zurück</a>
         </Link>
@@ -68,34 +41,45 @@ export default function EventPage({evt}) {
 }
 
 export async function getStaticPaths() {
+
+
   const res = await fetch(`${API_URL}/api/events/`);
 
   const json = await res.json();
   const events = json.data;
 
+  
+
   const paths = events?.map((evt) => (
     {
-      params: {slug: evt.attributes.slug}
+      params: {slug: evt?.attributes.slug}
     }
   ));
 
+  console.log("Static Paths:", paths)
+
   return {
     paths,
-    fallback: true
+    fallback: true,
   }
 }
 
 export async function getStaticProps({params: {slug}}) {
-  console.log(slug);
+  console.log("Slug:", slug);
+
 
   const res = await fetch(`${API_URL}/api/events?populate=*&filters[slug]=${slug}`);
 
   const json = await res.json();
+  console.log("JSON:", json)
+
   const events = json.data;
+  
+  console.log("EVENTS:", events)
 
   return {
     props: {
-      evt: events[0]
+      evt: events[0],
     },
     revalidate: 1,
   }
